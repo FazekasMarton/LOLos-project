@@ -10,7 +10,7 @@ export class CreateCharacterDto {
   @IsInt()
   @Min(1)
   @Max(1000)
-  health: number;
+  hp: number;
 
   @IsInt()
   @Min(1)

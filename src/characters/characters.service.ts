@@ -1,26 +1,59 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCharacterDto } from './dto/create-character.dto';
 import { UpdateCharacterDto } from './dto/update-character.dto';
+import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class CharactersService {
-  create(createCharacterDto: CreateCharacterDto) {
-    return 'This action adds a new character';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createCharacterDto: CreateCharacterDto) {
+    return this.prisma.characters.create({
+      data: createCharacterDto
+    });
   }
 
-  findAll() {
-    return `This action returns all characters`;
+  async findAll() {
+    return await this.prisma.characters.findMany({
+      include: {
+        regions: {
+          select: {
+            name: true,
+          }
+        }
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} character`;
+  async findOne(id: number) {
+    return await this.prisma.characters.findMany({
+      include: {
+        regions: {
+          select: {
+            name: true,
+          }
+        }
+      },
+      where: {
+        id: id
+      }
+    });
   }
 
-  update(id: number, updateCharacterDto: UpdateCharacterDto) {
-    return `This action updates a #${id} character`;
+  async update(id: number, updateCharacterDto: UpdateCharacterDto) {
+    return await this.prisma.characters.update({
+      where: {
+        id: id
+      },
+      data: updateCharacterDto
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} character`;
+  async remove(id: number) {
+    return await this.prisma.characters.delete({
+      where: {
+        id: id
+      }
+    });
   }
 }
