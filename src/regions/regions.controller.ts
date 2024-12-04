@@ -17,6 +17,11 @@ export class RegionsController {
     return this.regionsService.findAll();
   }
 
+  @Get('population')
+  countAll(){
+    return this.regionsService.countAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.regionsService.findOne(+id);

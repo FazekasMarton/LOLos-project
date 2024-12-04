@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class RegionsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async create(createRegionDto: CreateRegionDto) {
     return await this.prisma.regions.create({
@@ -40,5 +40,23 @@ export class RegionsService {
         id: id
       }
     });
+  }
+
+  async countAll() {
+    const regions = await this.prisma.regions.findMany({
+      select: {
+        name: true,
+        characters: {
+          select: {
+            id: true
+          }
+        }
+      }
+    })
+
+    return regions.map(region => ({
+      name: region.name,
+      population: region.characters.length
+    }))
   }
 }
